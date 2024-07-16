@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     try {
       await signInWithEmailAndPassword(auth, values.email, values.password);
       message.success("Logged in Successfully");
-      navigate("/dashboard");
+      navigate("/home");
     } catch (error) {
       console.error(error);
       setLoading(false);
