@@ -66,14 +66,24 @@ const Login: React.FC = () => {
           </Form.Item>
 
           <Form.Item>
-            <StyledButton
-              type="link"
-              htmlType="submit"
-              block
-              loading={loading}
-            >
-              LOGIN
-            </StyledButton>
+            <Space direction="horizontal" size="middle">
+              <StyledButton
+                type="link"
+                htmlType="submit"
+                block
+                loading={loading}
+              >
+                IN AS USER
+              </StyledButton>
+              <StyledButton
+                type="link"
+                htmlType="submit"
+                block
+                loading={loading}
+              >
+                IN AS ADMIN
+              </StyledButton>
+            </Space>
           </Form.Item>
         </Form>
         <SignupButton>
