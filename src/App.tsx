@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../src/config/firebase.config.ts";
+import { auth } from "../src/config/firebase.config";
 import { Spin } from 'antd';
 // import Dashboard from './pages/Dashboard.tsx';
-import Login from './pages/Login.tsx';
-// import SignUp from './pages/SignUp.tsx';
+import Login from './pages/Login';
+import SignUp from './pages/Signup';
 
 function App() {
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<boolean>(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (userAuth) => {
@@ -34,13 +34,13 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<AuthRoute element={<Login />} />} />
-        {/* <Route path="/signup" element={<AuthRoute element={<SignUp />} />} />
-        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} /> */}
+        <Route path="/signup" element={<AuthRoute element={<SignUp />} />} />
+        {/* <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} /> */}
       </Routes>
     </Router>
   );
 
-  function AuthRoute({ element }) {
+  function AuthRoute({ element }: { element: ReactElement }) {
     return user ? <Navigate to="/dashboard" /> : element;
   }
 
