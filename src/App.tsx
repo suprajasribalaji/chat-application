@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../src/config/firebase.config";
 import { Spin } from 'antd';
-// import Dashboard from './pages/Dashboard.tsx';
 import Login from './pages/Login';
 import SignUp from './pages/Signup';
+import Home from './pages/Home';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -35,7 +35,7 @@ function App() {
       <Routes>
         <Route path="/" element={<AuthRoute element={<Login />} />} />
         <Route path="/signup" element={<AuthRoute element={<SignUp />} />} />
-        {/* <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} /> */}
+        <Route path="/home" element={<ProtectedRoute element={<Home />} />} />
       </Routes>
     </Router>
   );
@@ -44,9 +44,9 @@ function App() {
     return user ? <Navigate to="/dashboard" /> : element;
   }
 
-  // function ProtectedRoute({ element }) {
-  //   return user ? element : <Navigate to="/" />;
-  // }
+  function ProtectedRoute({ element }: { element: ReactElement }) {
+    return user ? element : <Navigate to="/" />;
+  }
 }
 
 export default App;
