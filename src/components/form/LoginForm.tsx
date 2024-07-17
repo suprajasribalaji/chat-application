@@ -29,7 +29,6 @@ const LoginForm = ({ form, collectionName, successMessage, redirectPath, formTyp
       if (!querySnapshot.empty) {
         message.success(successMessage);
         navigate(redirectPath);
-        console.log(successMessage);
       } else {
         message.error('Invalid email or password');
         console.log('Invalid email or password');
