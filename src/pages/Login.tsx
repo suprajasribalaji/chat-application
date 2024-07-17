@@ -49,7 +49,7 @@ const UserLogin = () => {
         <Tabs defaultActiveKey="1">
           <TabPane tab="User" key="1">
             <LoginForm
-              form={form} // Pass form instance
+              form={form} 
               collectionName="user"
               successMessage="User logged in successfully"
               redirectPath="/home"
@@ -67,7 +67,7 @@ const UserLogin = () => {
                 footer={null}
               >
                 <LoginForm
-                  form={form} // Pass form instance
+                  form={form} 
                   collectionName="user"
                   successMessage="User registered successfully"
                   redirectPath="/home"
@@ -79,7 +79,7 @@ const UserLogin = () => {
           </TabPane>
           <TabPane tab="Admin" key="2">
             <LoginForm
-              form={form} // Pass form instance
+              form={form} 
               collectionName="admin"
               successMessage="Admin logged in successfully"
               redirectPath="/home"

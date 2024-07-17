@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface LoginFormProps {
-  form: any; // Form instance type
+  form: any; 
   collectionName: string;
   successMessage: string;
   redirectPath: string;
@@ -52,6 +52,17 @@ const LoginForm = ({ form, collectionName, successMessage, redirectPath, formTyp
     }
   };
 
+  const emailRules = [
+    { required: true, message: 'Please input your Email!' },
+    { type: 'email', message: 'Please enter a valid email address' } as const,
+  ];
+
+  const passwordRules = [
+    { required: true, message: 'Please input your Password!' },
+    { min: 6, message: 'Password must be at least 6 characters long' },
+    { pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/, message: 'Password must contain at least a letter, number, special character' } as const,
+  ];
+
   return (
     <StyledForm
       form={form}
@@ -72,7 +83,7 @@ const LoginForm = ({ form, collectionName, successMessage, redirectPath, formTyp
       )}
       <Form.Item
         name="email"
-        rules={[{ required: true, message: 'Please input your Email!' }]}
+        rules={emailRules}
       >
         <Input
           prefix={<UserOutlined />}
@@ -81,7 +92,7 @@ const LoginForm = ({ form, collectionName, successMessage, redirectPath, formTyp
       </Form.Item>
       <Form.Item
         name="password"
-        rules={[{ required: true, message: 'Please input your Password!' }]}
+        rules={passwordRules}
       >
         <Input.Password
           prefix={<LockOutlined />}
