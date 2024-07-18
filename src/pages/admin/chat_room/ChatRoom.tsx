@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { EditOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, message, Popconfirm, Form } from 'antd';
 import styled from 'styled-components';
-import { Buttons } from '../../components/themes/color';
+import { Buttons } from '../../../components/themes/color';
 import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
-import { firestore } from '../../config/firebase.config';
-import EditChatRoomModal from '../../components/modal/EditChatRoomModal';
-import CreateChatRoomModal from '../../components/modal/CreateChatRoomModal';
+import { firestore } from '../../../config/firebase.config';
+import EditChatRoomModal from '../../../components/modal/EditChatRoomModal';
+import CreateChatRoomModal from '../../../components/modal/CreateChatRoomModal';
 
 const { Meta } = Card;
 

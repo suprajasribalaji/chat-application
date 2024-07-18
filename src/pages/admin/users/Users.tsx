@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Space, message, Button, Popconfirm } from 'antd';
 import styled from 'styled-components';
 import { collection, getDocs, deleteDoc, doc, Timestamp } from 'firebase/firestore';
-import { firestore } from '../../config/firebase.config';
+import { firestore } from '../../../config/firebase.config';
 import { DeleteOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
