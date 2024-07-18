@@ -6,7 +6,7 @@ import { UserOutlined, WechatWorkOutlined, MenuFoldOutlined, MenuUnfoldOutlined,
 import { auth } from "../../config/firebase.config";
 import styled from 'styled-components';
 import { Buttons, PageDivisionBackground } from '../../components/themes/color';
-import ChatRoom from './chat_room/ChatRoom';
+import ChatRoom from './chatRoom/ListChatRoom';
 import Users from './users/Users';
 
 const { Header, Sider, Content } = Layout;
