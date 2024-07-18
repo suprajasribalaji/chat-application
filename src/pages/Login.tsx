@@ -82,7 +82,7 @@ const UserLogin = () => {
               form={form} 
               collectionName="admin"
               successMessage="Admin logged in successfully"
-              redirectPath="/home"
+              redirectPath="/admin"
               formType="login"
             />
           </TabPane>

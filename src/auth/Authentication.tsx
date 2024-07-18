@@ -5,13 +5,11 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 interface User {
   id: string;
   email: string;
-  // Add other user-specific properties as needed
 }
 
 interface Admin {
   id: string;
   email: string;
-  // Add other admin-specific properties as needed
 }
 
 interface AuthContextType {
@@ -34,12 +32,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const userLogin = (userData: User) => {
     setUser(userData);
-    console.log(user); // Note: `user` here might still show the previous state due to closure
-    
+    console.log('user: ', user);
   };
 
   const adminLogin = (adminData: Admin) => {
     setAdmin(adminData);
+    console.log('admin: ', user);
   };
 
   const userLogout = () => {
