@@ -1,5 +1,6 @@
 export const PageDivisionBackground = {
     navbarBg: '#C9D7DD',
+    contentBg: '#1B1A55',
 }
 
 export const Buttons = {
