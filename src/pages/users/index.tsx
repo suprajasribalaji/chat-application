@@ -1,11 +1,11 @@
 import { Button, Space } from 'antd';
 import { styled } from 'styled-components';
-import { Buttons, PageDivisionBackground } from '../components/themes/color';
+import { Buttons, PageDivisionBackground } from '../../components/themes/color';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { auth } from "../config/firebase.config";
+import { auth } from "../../config/firebase.config";
 
-const Home: React.FC = () => {
+const UserHome: React.FC = () => {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -35,7 +35,7 @@ const Home: React.FC = () => {
     );
 };
 
-export default Home;
+export default UserHome;
 
 const DashboardComponent = styled.div`
     height: 97.6vh;
