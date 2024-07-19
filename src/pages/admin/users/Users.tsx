@@ -157,7 +157,7 @@ const Users: React.FC = () => {
                         user_id: user.user_id,
                         email: user.email,
                         createdAt: user.createdAt,
-                        joined_rooms_names: user.joined_rooms_names || [], // Added joined_rooms_names field
+                        joined_rooms_names: user.joined_rooms_names || [],
                     }))}
                 />
             </TableContainer>

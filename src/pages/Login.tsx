@@ -5,6 +5,7 @@ import { Button, Form, Modal, Tabs, message } from 'antd';
 import styled from 'styled-components';
 import Title from 'antd/es/typography/Title';
 import LoginForm from '../components/form/LoginForm';
+import { Buttons } from '../components/themes/color';
 
 const { TabPane } = Tabs;
 
@@ -105,7 +106,7 @@ const StyledFormContainer = styled.div`
   width: 100%;
   max-width: 400px;
   padding: 20px;
-  background-color: #fff;
+  background-color: ${Buttons.text};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   display: flex;

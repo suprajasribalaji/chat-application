@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { collection, getDocs, query, where, doc, setDoc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../../config/firebase.config';
+import { Buttons } from '../../../components/themes/color';
 
 interface ChatRoomProps {
   roomID: string;
@@ -227,7 +228,7 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 2%;
-  background-color: #f0f2f5;
+  background-color: ${Buttons.headerFooter};
 `;
 
 const RoomID = styled.p`
@@ -238,7 +239,7 @@ const Content = styled.div`
   flex: 1;
   padding: 2%;
   overflow-y: auto; 
-  background-color: #ffffff;
+  background-color: ${Buttons.text};
 `;
 
 const Message = styled.div`
@@ -247,7 +248,7 @@ const Message = styled.div`
 
 const Footer = styled.div`
   padding: 16px;
-  background-color: #f0f2f5;
+  background-color: ${Buttons.headerFooter};
 `;
 
 const StyledFooter = styled.div`

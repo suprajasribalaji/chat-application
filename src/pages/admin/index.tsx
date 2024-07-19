@@ -70,7 +70,7 @@ const AdminHome: React.FC = () => {
           />
           <NavBarItems>
             <Space>
-              <StyledButton type='link' onClick={handleLogout} icon={<LogoutOutlined />}>Logout</StyledButton>
+              <Button type='link' onClick={handleLogout} icon={<LogoutOutlined />}>Logout</Button>
             </Space>
           </NavBarItems>
         </StyledHeader>
@@ -112,14 +112,4 @@ const NavBarItems = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-right: 20px;
-`;
-
-const StyledButton = styled(Button)`
-
-//   background-color: ${Buttons.backgroundColor};
-//   color: ${Buttons.text};
-//   border: none;
-//   &&&:hover {
-//     color: ${Buttons.hover};
-//   }
 `;
