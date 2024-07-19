@@ -11,8 +11,8 @@ interface User {
     user_id: number;
     email: string;
     createdAt: Timestamp;
-    joined_rooms: Array<string>; // Room IDs
-    joined_rooms_names?: Array<string>; // Room Names (optional)
+    joined_rooms: Array<string>;
+    joined_rooms_names?: Array<string>;
 }
 
 const Users: React.FC = () => {
@@ -21,7 +21,7 @@ const Users: React.FC = () => {
         user_id: 100,
         email: 250,
         createdAt: 150,
-        joined_rooms: 200, // Width for joined_rooms column
+        joined_rooms: 200,
         actions: 100,
     });
 
@@ -34,8 +34,6 @@ const Users: React.FC = () => {
             const usersRef = collection(firestore, 'user');
             const snapshot = await getDocs(usersRef);
             const roomRef = collection(firestore, 'chat_room');
-
-            // Fetch all rooms
             const roomSnapshot = await getDocs(roomRef);
             const roomNamesMap: { [key: string]: string } = {};
             roomSnapshot.forEach(doc => {
@@ -81,11 +79,10 @@ const Users: React.FC = () => {
     const updateColumnWidths = (users: User[]) => {
         let maxUserIdWidth = 100;
         let maxEmailWidth = 250;
-        let maxJoinedRoomsWidth = 200; // Default width for joined_rooms
-
+        let maxJoinedRoomsWidth = 200;
         users.forEach(user => {
-            maxEmailWidth = Math.max(maxEmailWidth, user.email.length * 8); // Assume 8px per character for email width
-            maxJoinedRoomsWidth = Math.max(maxJoinedRoomsWidth, (user.joined_rooms_names?.join(', ') || '').length * 8); // Adjusted width calculation
+            maxEmailWidth = Math.max(maxEmailWidth, user.email.length * 8); 
+            maxJoinedRoomsWidth = Math.max(maxJoinedRoomsWidth, (user.joined_rooms_names?.join(', ') || '').length * 8); 
         });
 
         setColumnWidths({

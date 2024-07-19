@@ -42,11 +42,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
       querySnapshot.forEach((doc) => {
         const data = doc.data() as CurrentChatRoom;
         setCurrentRoom(data);
-        // Convert messages from map to array
         const messagesArray = Object.entries(data.messages || {}).map(([key, value]) => ({
           id: key,
           ...value,
-          sender: value.userID // Assuming userID is the sender
+          sender: value.userID
         }));
         setMessages(messagesArray);
         console.log(data);
@@ -63,7 +62,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
       if (docSnap.exists()) {
         const userData = docSnap.data();
         console.log('ud: ', userData);
-        return userData?.user_id || null; // Assuming 'userID' field contains the actual user ID
+        return userData?.user_id || null;
       } else {
         console.log('No such user!');
         return null;
@@ -108,7 +107,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
   }, [roomID]);
 
   useEffect(() => {
-    // Load messages from local storage on component mount
     const storedMessages = localStorage.getItem(`messages_${roomID}`);
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
@@ -116,13 +114,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
   }, [roomID]);
 
   useEffect(() => {
-    // Save messages to local storage whenever they change
     localStorage.setItem(`messages_${roomID}`, JSON.stringify(messages));
   }, [messages, roomID]);
 
   const sendMessage = async () => {
     if (input && userID) {
-      // Fetch the user ID using the document ID
       const actualUserID = await getUserIDByDocId(userID);
 
       if (!actualUserID) {
@@ -132,7 +128,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
 
       const newMessage = { userID: actualUserID, content: input, sender: actualUserID };
       
-      // Send message via WebSocket
       if (socket.current) {
         socket.current.send(JSON.stringify(newMessage));
       } else {
@@ -141,9 +136,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
         return;
       }
       
-      // Update Firestore
       try {
-        // First, get the document reference
         const chatRoomRef = collection(firestore, 'chat_room');
         const q = query(chatRoomRef, where('roomID', '==', roomID));
         const querySnapshot = await getDocs(q);

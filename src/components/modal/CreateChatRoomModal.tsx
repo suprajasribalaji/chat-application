@@ -1,4 +1,3 @@
-// CreateChatRoomModal.tsx
 import { Form, Input, message, Modal } from "antd";
 import { collection, addDoc, where, query, getDocs } from "firebase/firestore";
 import { firestore } from "../../config/firebase.config";
