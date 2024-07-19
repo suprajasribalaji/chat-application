@@ -1,6 +1,6 @@
-// src/auth/AuthContext.tsx
-
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { doc, updateDoc } from 'firebase/firestore';
+import { firestore } from '../config/firebase.config';
 
 interface User {
   id: string;
@@ -38,17 +38,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (storedAdmin) setAdmin(JSON.parse(storedAdmin));
   }, []);
 
-  const userLogin = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData)); // Save to local storage
+  const updateStatus = async (userId: string, status: 'online' | 'offline') => {
+    const userDocRef = doc(firestore, 'user', userId);
+    await updateDoc(userDocRef, { status });
   };
 
-  const adminLogin = (adminData: Admin) => {
+  const userLogin = async (userData: User) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData)); // Save to local storage
+    await updateStatus(userData.id, 'online');
+  };
+
+  const adminLogin = async (adminData: Admin) => {
     setAdmin(adminData);
     localStorage.setItem('admin', JSON.stringify(adminData)); // Save to local storage
   };
 
-  const userLogout = () => {
+  const userLogout = async () => {
+    if (user) {
+      await updateStatus(user.id, 'offline');
+    }
     setUser(null);
     setAdmin(null);
     localStorage.removeItem('user'); // Remove from local storage
