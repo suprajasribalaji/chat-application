@@ -5,15 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import { UserOutlined, WechatWorkOutlined, MenuFoldOutlined, MenuUnfoldOutlined, LogoutOutlined } from '@ant-design/icons';
 import { auth } from "../../config/firebase.config";
 import styled from 'styled-components';
-import { Buttons, PageDivisionBackground } from '../../components/themes/color';
-import ChatRoom from './chatRoom/ListChatRoom';
-import Users from './users/Users';
+import { PageDivisionBackground } from '../../components/themes/color';
+import ListAllChatRoom from './chatRoom/ListAllChatRoom';
+import ListJoinedChatRoom from './chatRoom/ListJoinedChatRoom';
+import UserProfile from './profile/UserProfile';
 
 const { Header, Sider, Content } = Layout;
 
-const AdminHome: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [selectedMenuItem, setSelectedMenuItem] = useState('chatRoom');
+const UserHome: React.FC = () => {
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [selectedMenuItem, setSelectedMenuItem] = useState<string>('profile');
   const navigate = useNavigate();
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -42,16 +43,27 @@ const AdminHome: React.FC = () => {
           defaultSelectedKeys={['1']}
           selectedKeys={[selectedMenuItem]}
           onClick={handleMenuClick}
+          style={{ paddingTop: '6%' }}
           items={[
             {
-              key: 'chatRoom',
-              icon: <WechatWorkOutlined />,
-              label: 'Chat Room',
+              key: 'profile',
+              icon: <UserOutlined />,
+              label: 'Profile',
             },
             {
-              key: 'users',
-              icon: <UserOutlined />,
-              label: 'Users',
+                key: 'chatRoom',
+                icon: <WechatWorkOutlined />,
+                label: 'Chat Room',
+                children: [
+                {
+                    key: 'allRooms',
+                    label: 'All Rooms',
+                },
+                {
+                    key: 'joinedRooms',
+                    label: 'Joined Rooms',
+                },
+              ],
             },
           ]}
         />
@@ -85,14 +97,16 @@ const AdminHome: React.FC = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          {selectedMenuItem === 'chatRoom' ? <ChatRoom /> : <Users />}
+          {selectedMenuItem === 'profile' && <UserProfile />}
+          {selectedMenuItem === 'allRooms' && <ListAllChatRoom />}
+          {selectedMenuItem === 'joinedRooms' && <ListJoinedChatRoom/>}
         </StyledContent>
       </Layout>
     </StyledLayout>
   );
 };
 
-export default AdminHome;
+export default UserHome;
 
 const StyledLayout = styled(Layout)`
   height: 100vh;

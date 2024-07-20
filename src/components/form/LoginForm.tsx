@@ -4,9 +4,10 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { firestore } from '../../config/firebase.config';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useAuth } from '../../auth/Authentication';
 
 interface LoginFormProps {
-  form: any; 
+  form: any;
   collectionName: string;
   successMessage: string;
   redirectPath: string;
@@ -16,6 +17,7 @@ interface LoginFormProps {
 
 const LoginForm = ({ form, collectionName, successMessage, redirectPath, formType, onRegister }: LoginFormProps) => {
   const navigate = useNavigate();
+  const { userLogin } = useAuth(); 
 
   const handleLogin = async () => {
     try {
@@ -27,6 +29,8 @@ const LoginForm = ({ form, collectionName, successMessage, redirectPath, formTyp
       );
 
       if (!querySnapshot.empty) {
+        const userData = { id: querySnapshot.docs[0].id, email }; 
+        userLogin(userData);
         message.success(successMessage);
         navigate(redirectPath);
       } else {
@@ -37,7 +41,6 @@ const LoginForm = ({ form, collectionName, successMessage, redirectPath, formTyp
       console.error('Error logging in:', error.message);
     }
   };
-
   const handleSubmit = async () => {
     if (formType === 'login') {
       handleLogin();

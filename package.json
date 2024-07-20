@@ -17,11 +17,15 @@
     "firebase": "^10.12.3",
     "firebase-admin": "^12.2.0",
     "moment": "^2.30.1",
+    "nodemon": "^3.1.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-firebase-hooks": "^5.1.1",
     "react-router-dom": "^6.24.1",
     "styled-components": "^6.1.11",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "websocket": "^1.0.35",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
