@@ -8,6 +8,7 @@ import styled from 'styled-components';
 interface User {
   email: string;
   user_id: string;
+  status: string;
   joined_rooms: Array<string>;
   createdAt: Timestamp;
 }
@@ -83,6 +84,7 @@ const UserProfile: React.FC = () => {
           <Descriptions bordered column={1}>
             <Descriptions.Item label="Email">{currentUser.email}</Descriptions.Item>
             <Descriptions.Item label="User ID">{currentUser.user_id}</Descriptions.Item>
+            <Descriptions.Item label="Status">{currentUser.status}</Descriptions.Item>
             <Descriptions.Item label="Joined Rooms">
               {currentUser.joined_rooms.length > 0
                 ? currentUser.joined_rooms.map(roomID => roomNames[roomID] || roomID).join(', ')
