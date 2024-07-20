@@ -107,7 +107,7 @@ const ListJoinedChatRoom: React.FC = () => {
   return (
     <Container>
       {selectedRoomID ? (
-        <ChatRoom roomID={selectedRoomID} onClose={handleCloseChatRoom} />
+        <ChatRoom roomID={selectedRoomID} userID={currentUser?.user_id} onClose={handleCloseChatRoom} />
       ) : (
         <StyledCardContainer>
           {filteredChatRooms.length > 0 ? (

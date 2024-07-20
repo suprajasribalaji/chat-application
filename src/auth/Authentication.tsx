@@ -1,6 +1,4 @@
-// src/auth/AuthContext.tsx
-
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
   id: string;
@@ -30,29 +28,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [admin, setAdmin] = useState<Admin | null>(null);
 
-  useEffect(() => {
-    // Load user and admin data from local storage on initial load
-    const storedUser = localStorage.getItem('user');
-    const storedAdmin = localStorage.getItem('admin');
-    if (storedUser) setUser(JSON.parse(storedUser));
-    if (storedAdmin) setAdmin(JSON.parse(storedAdmin));
-  }, []);
-
   const userLogin = (userData: User) => {
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData)); // Save to local storage
+    console.log('user: ', user);
   };
 
   const adminLogin = (adminData: Admin) => {
     setAdmin(adminData);
-    localStorage.setItem('admin', JSON.stringify(adminData)); // Save to local storage
+    console.log('admin: ', user);
   };
 
   const userLogout = () => {
     setUser(null);
     setAdmin(null);
-    localStorage.removeItem('user'); // Remove from local storage
-    localStorage.removeItem('admin'); // Remove from local storage
   };
 
   return (

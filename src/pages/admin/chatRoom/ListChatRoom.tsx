@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { EditOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, message, Popconfirm, Form } from 'antd';
 import styled from 'styled-components';
-import { Buttons } from '../../../components/themes/color';
 import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { firestore } from '../../../config/firebase.config';
 import EditChatRoomModal from '../../../components/modal/EditChatRoomModal';
@@ -82,7 +81,7 @@ const ChatRoom: React.FC = () => {
     return (
         <Container>
             <Header>
-                <CreateButton type='primary' icon={<PlusCircleOutlined />} onClick={handleCreateNewRoomButton}>New Room</CreateButton>
+                <Button type='primary' icon={<PlusCircleOutlined />} onClick={handleCreateNewRoomButton}>New Room</Button>
             </Header>
             <StyledCardContainer>
                 <CardContainer>
@@ -146,16 +145,6 @@ const Header = styled.div`
     display: flex;
     justify-content: flex-end;
     margin-bottom: 2%;
-`;
-
-const CreateButton = styled(Button)`
-    // Uncomment and customize if needed
-    // background-color: ${Buttons.backgroundColor};
-    // color: ${Buttons.text};
-    // border: none;
-    // &&&:hover {
-    //     color: ${Buttons.hover};
-    // }
 `;
 
 const StyledCardContainer = styled.div`
