@@ -5,11 +5,18 @@ import styled from 'styled-components';
 import { collection, getDocs, query, where, doc, setDoc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../../config/firebase.config';
 import { Buttons } from '../../../components/themes/color';
+import ShowActiveUsersOfRoomModal from '../../../components/modal/ShowActiveUsersOfRoomModal';
 
 interface ChatRoomProps {
   roomID: string;
   userID: string | undefined;
   onClose: () => void;
+}
+
+interface User {
+  email: string;
+  status: string;
+  user_id: string;
 }
 
 interface Message {
@@ -29,12 +36,59 @@ interface CurrentChatRoom {
 }
 
 const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
+  const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [currentRoom, setCurrentRoom] = useState<CurrentChatRoom | null>(null);
   const socket = useRef<WebSocket | null>(null);
 
-  const currentChatRoom = async () => {
+  useEffect(() => {
+    console.log('onlineUsers state updated:', onlineUsers);
+  }, [onlineUsers]);
+  
+  const showAllActiveUsers = async () => {
+    console.log('Fetching active users for room:', roomID);
+    try {
+      const usersRef = collection(firestore, 'user');
+      const q = query(
+        usersRef, 
+        where('status', '==', 'online'),
+        where('joined_rooms', 'array-contains', roomID)
+      );
+      console.log('query: ', q);
+      
+      const querySnapshot = await getDocs(q);
+      console.log('Query snapshot size:', querySnapshot.size);
+      const users = querySnapshot.docs.map((doc) => {
+        const userData = doc.data() as User;
+        console.log('User data:', userData);
+        return {
+          email: userData.email,
+          user_id: userData.user_id,
+          status: userData.status
+        };
+      });
+      setOnlineUsers(users);
+      setIsModalVisible(true);
+    } catch (error) {
+      console.error('Error fetching active users:', error);
+    }
+  };
+  
+   const handleOk = () => {
+    console.log('Modal OK clicked');
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    console.log('Modal Cancel clicked');
+    setIsModalVisible(false);
+  };
+   
+  console.log('Current onlineUsers:', onlineUsers);
+  
+   const currentChatRoom = async () => {
     try {
       const chatRoomRef = collection(firestore, 'chat_room');
       const querySnapshot = await getDocs(
@@ -55,7 +109,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
       console.log(error);
     }
   };
-
+  
   const getUserIDByDocId = async (docId: string): Promise<string | null> => {
     try {
       const userRef = doc(firestore, 'user', docId);
@@ -73,7 +127,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
       return null;
     }
   };
-
+  
   useEffect(() => {
     currentChatRoom();
 
@@ -106,18 +160,18 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
       }
     };
   }, [roomID]);
-
+  
   useEffect(() => {
     const storedMessages = localStorage.getItem(`messages_${roomID}`);
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
     }
   }, [roomID]);
-
-  useEffect(() => {
+  
+   useEffect(() => {
     localStorage.setItem(`messages_${roomID}`, JSON.stringify(messages));
   }, [messages, roomID]);
-
+  
   const sendMessage = async () => {
     if (input && userID) {
       const actualUserID = await getUserIDByDocId(userID);
@@ -171,7 +225,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
       setInput('');
     }
   };
-
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
@@ -181,7 +235,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
       sendMessage();
     }
   };
-
+  
   return (
     <ChatRoomContainer>
       <Header>
@@ -210,6 +264,13 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
           <Button type='link' icon={<SendOutlined />} onClick={sendMessage} />
         </StyledFooter>
       </Footer>
+
+      <ShowActiveUsersOfRoomModal
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        users={onlineUsers}
+      />
     </ChatRoomContainer>
   );
 };
@@ -233,6 +294,11 @@ const Header = styled.div`
 
 const RoomID = styled.p`
   margin: 0;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 8px;
 `;
 
 const Content = styled.div`
