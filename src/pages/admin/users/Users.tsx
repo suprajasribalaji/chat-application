@@ -10,6 +10,7 @@ import moment from 'moment';
 interface User {
     user_id: number;
     email: string;
+    status: string;
     createdAt: Timestamp;
     joined_rooms: Array<string>;
     joined_rooms_names?: Array<string>;
@@ -20,6 +21,7 @@ const Users: React.FC = () => {
     const [columnWidths, setColumnWidths] = useState<{ [key: string]: number }>({
         user_id: 100,
         email: 250,
+        status: 20,
         createdAt: 150,
         joined_rooms: 200,
         actions: 100,
@@ -34,6 +36,7 @@ const Users: React.FC = () => {
             const usersRef = collection(firestore, 'user');
             const snapshot = await getDocs(usersRef);
             const roomRef = collection(firestore, 'chat_room');
+
             const roomSnapshot = await getDocs(roomRef);
             const roomNamesMap: { [key: string]: string } = {};
             roomSnapshot.forEach(doc => {
@@ -80,14 +83,16 @@ const Users: React.FC = () => {
         let maxUserIdWidth = 100;
         let maxEmailWidth = 250;
         let maxJoinedRoomsWidth = 200;
+
         users.forEach(user => {
             maxEmailWidth = Math.max(maxEmailWidth, user.email.length * 8); 
-            maxJoinedRoomsWidth = Math.max(maxJoinedRoomsWidth, (user.joined_rooms_names?.join(', ') || '').length * 8); 
+            maxJoinedRoomsWidth = Math.max(maxJoinedRoomsWidth, (user.joined_rooms_names?.join(', ') || '').length * 8);
         });
 
         setColumnWidths({
             user_id: maxUserIdWidth,
             email: maxEmailWidth + 50,
+            status: 40,
             createdAt: 150,
             joined_rooms: maxJoinedRoomsWidth + 50,
             actions: 100,
@@ -108,6 +113,13 @@ const Users: React.FC = () => {
             key: 'email',
             align: 'center',
             width: columnWidths.email,
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            align: 'center',
+            width: columnWidths.status,
         },
         {
             title: 'Joined Rooms',
@@ -156,6 +168,7 @@ const Users: React.FC = () => {
                         key: user.user_id,
                         user_id: user.user_id,
                         email: user.email,
+                        status: user.status,
                         createdAt: user.createdAt,
                         joined_rooms_names: user.joined_rooms_names || [],
                     }))}
