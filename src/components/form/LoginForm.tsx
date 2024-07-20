@@ -23,7 +23,7 @@ interface User {
 
 const LoginForm = ({ form, collectionName, successMessage, redirectPath, formType, onRegister }: LoginFormProps) => {
   const navigate = useNavigate();
-  const { user, userLogin } = useAuth(); 
+  const { userLogin } = useAuth(); 
 
   const handleLogin = async () => {
     try {
