@@ -18,7 +18,7 @@ interface ChatRoom {
 
 interface User {
   email: string;
-  user_id: string; // Ensure user_id is included
+  user_id: string;
   joined_rooms: Array<string>;
 }
 
@@ -70,7 +70,7 @@ const ListJoinedChatRoom: React.FC = () => {
       let currentUser: User | null = null;
       querySnapshot.forEach(doc => {
         const data = doc.data() as User;
-        currentUser = { ...data, user_id: doc.id }; // Use the document ID for user_id
+        currentUser = { ...data, user_id: doc.id };
       });
       setCurrentUser(currentUser);
     } catch (error) {
@@ -85,7 +85,7 @@ const ListJoinedChatRoom: React.FC = () => {
     if (currentUser) {
       try {
         const updatedRooms = currentUser.joined_rooms.filter(id => id !== roomID);
-        const userDocRef = doc(firestore, 'user', currentUser.user_id); // Use user_id as the document ID
+        const userDocRef = doc(firestore, 'user', currentUser.user_id);
         await updateDoc(userDocRef, { joined_rooms: updatedRooms });
         setCurrentUser({ ...currentUser, joined_rooms: updatedRooms });
         message.success('Successfully left the chat room');
@@ -101,7 +101,7 @@ const ListJoinedChatRoom: React.FC = () => {
   };
 
   const handleCloseChatRoom = () => {
-    setSelectedRoomID(null); // Reset the selected room to show the list of rooms again
+    setSelectedRoomID(null);
   };
 
   return (
