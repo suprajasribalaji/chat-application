@@ -36,7 +36,7 @@ const LoginForm = ({ form, collectionName, successMessage, redirectPath, formTyp
 
       if (!querySnapshot.empty) {
         const userData = { id: querySnapshot.docs[0].id, email }; 
-        userLogin(userData);  // Set the user context here
+        userLogin(userData);
         const usersRef = collection(firestore, 'user');
         const userQuerySnapshot = await getDocs(usersRef);
         userQuerySnapshot.forEach(async (snapshot) => {
