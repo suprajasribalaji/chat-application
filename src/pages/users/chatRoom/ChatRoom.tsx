@@ -6,17 +6,12 @@ import { collection, getDocs, query, where, doc, setDoc, getDoc } from 'firebase
 import { firestore } from '../../../config/firebase.config';
 import { Buttons } from '../../../components/themes/color';
 import ShowActiveUsersOfRoomModal from '../../../components/modal/ShowActiveUsersOfRoomModal';
+import { CurrentChatRoom, User } from '../../../utils/utils';
 
 interface ChatRoomProps {
   roomID: string;
   userID: string | undefined;
   onClose: () => void;
-}
-
-interface User {
-  email: string;
-  status: string;
-  user_id: string;
 }
 
 interface Message {
@@ -25,15 +20,6 @@ interface Message {
   content: string;
   sender: string;
   timestamp: number;
-}
-
-interface CurrentChatRoom {
-  roomID: string;
-  roomName: string;
-  createdAt: { seconds: number; nanoseconds: number };
-  createdBy: string;
-  updatedBy: string;
-  messages: { [key: string]: { userID: string; content: string; sender: string; timestamp: number } };
 }
 
 const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
@@ -58,26 +44,28 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
         where('joined_rooms', 'array-contains', roomID)
       );
       console.log('query: ', q);
-
+  
       const querySnapshot = await getDocs(q);
       console.log('Query snapshot size:', querySnapshot.size);
       const users = querySnapshot.docs.map((doc) => {
         const userData = doc.data() as User;
-        console.log('User data:', userData);
         return {
           email: userData.email,
           user_id: userData.user_id,
-          status: userData.status
+          status: userData.status,
+          joined_rooms: userData.joined_rooms,
+          createdAt: userData.createdAt
         };
       });
-      setOnlineUsers(users);
+      setOnlineUsers(users as User[]);
       setIsModalVisible(true);
     } catch (error) {
       console.error('Error fetching active users:', error);
     }
   };
   
-   const handleOk = () => {
+  
+  const handleOk = () => {
     console.log('Modal OK clicked');
     setIsModalVisible(false);
   };

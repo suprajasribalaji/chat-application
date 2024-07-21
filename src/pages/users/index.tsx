@@ -11,14 +11,9 @@ import ListJoinedChatRoom from './chatRoom/ListJoinedChatRoom';
 import UserProfile from './profile/UserProfile';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { useAuth } from '../../auth/Authentication';
+import { User } from '../../utils/utils';
 
 const { Header, Sider, Content } = Layout;
-
-interface User {
-  email: string;
-  status: string;
-  user_id: string;
-}
 
 const UserHome: React.FC = () => {
   const { user } = useAuth();

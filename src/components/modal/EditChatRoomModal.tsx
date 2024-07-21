@@ -1,18 +1,12 @@
 import { Form, Input, message, Modal } from "antd";
 import { collection, doc, getDocs, updateDoc, query, where } from "firebase/firestore";
 import { firestore } from "../../config/firebase.config";
-
-interface ChatRoom {
-    roomID: number;
-    roomName: string;
-    createdBy: string;
-    updatedBy?: string;
-}
+import { ChatRooms } from "../../utils/utils";
 
 interface EditChatRoomProps {
     form: any,
     isEditRoomModalOpen: boolean,
-    selectedRoom: ChatRoom | null,
+    selectedRoom: ChatRooms | null,
     setIsEditRoomModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
     fetchChatRooms: () => Promise<void>,
 };
@@ -41,7 +35,7 @@ const EditChatRoomModal = ({ form, isEditRoomModalOpen, selectedRoom, setIsEditR
                 const chatRoomsRef = collection(firestore, 'chat_room');
                 const querySnapshot = await getDocs(chatRoomsRef);
                 querySnapshot.forEach(async (snapshot) => {
-                    const roomData = snapshot.data() as ChatRoom;
+                    const roomData = snapshot.data() as ChatRooms;
                     if (roomData.roomID === selectedRoom.roomID && roomData.createdBy === selectedRoom.createdBy) {
                         await updateDoc(doc(chatRoomsRef, snapshot.id), updatedRoom);
                         message.success('Chat room updated successfully');

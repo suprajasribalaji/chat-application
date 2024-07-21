@@ -5,6 +5,7 @@ import { firestore } from '../../config/firebase.config';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuth } from '../../auth/Authentication';
+import { User } from '../../utils/utils';
 
 interface LoginFormProps {
   form: any;
@@ -13,12 +14,6 @@ interface LoginFormProps {
   redirectPath: string;
   formType: 'login' | 'register';
   onRegister?: (values: any) => void;
-}
-
-interface User {
-  email: string;
-  status: string;
-  user_id: string;
 }
 
 const LoginForm = ({ form, collectionName, successMessage, redirectPath, formType, onRegister }: LoginFormProps) => {

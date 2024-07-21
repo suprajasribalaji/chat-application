@@ -6,21 +6,9 @@ import { collection, getDocs, query, where, updateDoc, doc } from 'firebase/fire
 import { firestore } from '../../../config/firebase.config';
 import { useAuth } from '../../../auth/Authentication';
 import ChatRoom from './ChatRoom';
+import { ChatRooms, User } from '../../../utils/utils';
 
 const { Meta } = Card;
-
-interface ChatRoom {
-  roomID: string;
-  roomName: string;
-  createdBy: string;
-  updatedBy?: string;
-}
-
-interface User {
-  email: string;
-  user_id: string;
-  joined_rooms: Array<string>;
-}
 
 const url = 'https://api.dicebear.com/9.x/bottts/svg?seed=';
 
@@ -31,7 +19,7 @@ const avatars = [
 
 const ListJoinedChatRoom: React.FC = () => {
   const { user } = useAuth();
-  const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
+  const [chatRooms, setChatRooms] = useState<ChatRooms[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [selectedRoomID, setSelectedRoomID] = useState<string | null>(null);
 
@@ -49,9 +37,9 @@ const ListJoinedChatRoom: React.FC = () => {
     try {
       const chatRoomsRef = collection(firestore, 'chat_room');
       const snapshot = await getDocs(chatRoomsRef);
-      const chatRooms: ChatRoom[] = [];
+      const chatRooms: ChatRooms[] = [];
       snapshot.forEach(doc => {
-        const data = doc.data() as ChatRoom;
+        const data = doc.data() as ChatRooms;
         chatRooms.push({ ...data });
       });
       setChatRooms(chatRooms);

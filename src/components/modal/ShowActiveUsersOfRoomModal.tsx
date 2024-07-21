@@ -1,11 +1,7 @@
 import React from 'react';
 import { Modal, List } from 'antd';
 import styled from 'styled-components';
-
-interface User {
-  email: string;
-  user_id: string;
-}
+import { User } from '../../utils/utils';
 
 interface ActiveUsersModalProps {
   visible: boolean;

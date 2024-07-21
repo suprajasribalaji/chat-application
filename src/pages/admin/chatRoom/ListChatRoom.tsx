@@ -6,15 +6,9 @@ import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { firestore } from '../../../config/firebase.config';
 import EditChatRoomModal from '../../../components/modal/EditChatRoomModal';
 import CreateChatRoomModal from '../../../components/modal/CreateChatRoomModal';
+import { ChatRooms } from '../../../utils/utils';
 
 const { Meta } = Card;
-
-interface ChatRoom {
-    roomID: number;
-    roomName: string;
-    createdBy: string;
-    updatedBy?: string;
-}
 
 const url = 'https://api.dicebear.com/9.x/bottts/svg?seed=';
 
@@ -24,10 +18,10 @@ const avatars = [
 ];
 
 const ChatRoom: React.FC = () => {
-    const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
+    const [chatRooms, setChatRooms] = useState<ChatRooms[]>([]);
     const [isEditRoomModalOpen, setIsEditRoomModalOpen] = useState<boolean>(false);
     const [isNewRoomModalOpen, setIsNewRoomModalOpen] = useState<boolean>(false);
-    const [selectedRoom, setSelectedRoom] = useState<ChatRoom | null>(null);
+    const [selectedRoom, setSelectedRoom] = useState<ChatRooms | null>(null);
     const [form] = Form.useForm();
 
     useEffect(() => {
@@ -38,9 +32,9 @@ const ChatRoom: React.FC = () => {
         try {
             const chatRoomsRef = collection(firestore, 'chat_room');
             const snapshot = await getDocs(chatRoomsRef);
-            const chatRooms: ChatRoom[] = [];
+            const chatRooms: ChatRooms[] = [];
             snapshot.forEach(doc => {
-                const data = doc.data() as ChatRoom;
+                const data = doc.data() as ChatRooms;
                 chatRooms.push({ ...data });
             });
             setChatRooms(chatRooms);
@@ -50,12 +44,12 @@ const ChatRoom: React.FC = () => {
         }
     };
 
-    const handleDeleteButton = async(roomID: number, createdBy: string) => {
+    const handleDeleteButton = async(roomID: string, createdBy: string) => {
         try {
             const chatRoomsRef = collection(firestore, 'chat_room');
             const querySnapshot = await getDocs(chatRoomsRef);
             querySnapshot.forEach(async (snapshot) => {
-                const roomData = snapshot.data() as ChatRoom;
+                const roomData = snapshot.data() as ChatRooms;
                 if (roomData.roomID === roomID && roomData.createdBy === createdBy) {
                     await deleteDoc(doc(chatRoomsRef, snapshot.id));
                     message.success('Chat room deleted successfully');
@@ -68,7 +62,7 @@ const ChatRoom: React.FC = () => {
         }
     };
 
-    const handleEditButton = (room: ChatRoom) => {
+    const handleEditButton = (room: ChatRooms) => {
         setSelectedRoom(room);
         form.setFieldsValue({ roomName: room.roomName, createdBy: room.createdBy, updatedBy: room?.updatedBy });
         setIsEditRoomModalOpen(true);

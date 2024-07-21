@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, query, Timestamp, where } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "../../../config/firebase.config";
 import { useAuth } from "../../../auth/Authentication";
 import { Descriptions, Spin, Typography, message } from "antd";
 import styled from 'styled-components';
 import { Buttons } from "../../../components/themes/color";
-
-interface User {
-  email: string;
-  user_id: string;
-  status: string;
-  joined_rooms: Array<string>;
-  createdAt: Timestamp;
-}
+import { User } from "../../../utils/utils";
 
 interface ChatRoom {
   roomID: string;

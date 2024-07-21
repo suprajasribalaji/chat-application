@@ -6,15 +6,7 @@ import { firestore } from '../../../config/firebase.config';
 import { DeleteOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
-
-interface User {
-    user_id: number;
-    email: string;
-    status: string;
-    createdAt: Timestamp;
-    joined_rooms: Array<string>;
-    joined_rooms_names?: Array<string>;
-}
+import { User } from '../../../utils/utils';
 
 const Users: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
