@@ -1,6 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message } from 'antd';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { firestore } from '../../config/firebase.config';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -13,6 +13,12 @@ interface LoginFormProps {
   redirectPath: string;
   formType: 'login' | 'register';
   onRegister?: (values: any) => void;
+}
+
+interface User {
+  email: string;
+  status: string;
+  user_id: string;
 }
 
 const LoginForm = ({ form, collectionName, successMessage, redirectPath, formType, onRegister }: LoginFormProps) => {
@@ -31,6 +37,15 @@ const LoginForm = ({ form, collectionName, successMessage, redirectPath, formTyp
       if (!querySnapshot.empty) {
         const userData = { id: querySnapshot.docs[0].id, email }; 
         userLogin(userData);
+        const usersRef = collection(firestore, 'user');
+        const userQuerySnapshot = await getDocs(usersRef);
+        userQuerySnapshot.forEach(async (snapshot) => {
+          const userData = snapshot.data() as User;
+          if (userData.email === email) {
+            await updateDoc(doc(usersRef, snapshot.id), { status: 'online' });
+            console.log('Status changed successfully');
+          }
+        });
         message.success(successMessage);
         navigate(redirectPath);
       } else {
@@ -41,6 +56,7 @@ const LoginForm = ({ form, collectionName, successMessage, redirectPath, formTyp
       console.error('Error logging in:', error.message);
     }
   };
+
   const handleSubmit = async () => {
     if (formType === 'login') {
       handleLogin();

@@ -3,16 +3,25 @@ import { Button, Space, Layout, Menu, theme } from 'antd';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { UserOutlined, WechatWorkOutlined, MenuFoldOutlined, MenuUnfoldOutlined, LogoutOutlined } from '@ant-design/icons';
-import { auth } from "../../config/firebase.config";
+import { auth, firestore } from "../../config/firebase.config";
 import styled from 'styled-components';
 import { PageDivisionBackground } from '../../components/themes/color';
 import ListAllChatRoom from './chatRoom/ListAllChatRoom';
 import ListJoinedChatRoom from './chatRoom/ListJoinedChatRoom';
 import UserProfile from './profile/UserProfile';
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { useAuth } from '../../auth/Authentication';
 
 const { Header, Sider, Content } = Layout;
 
+interface User {
+  email: string;
+  status: string;
+  user_id: string;
+}
+
 const UserHome: React.FC = () => {
+  const { user } = useAuth();
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState<string>('profile');
   const navigate = useNavigate();
@@ -22,13 +31,22 @@ const UserHome: React.FC = () => {
 
   const handleLogout = async () => {
     try {
+      const usersRef = collection(firestore, 'user');
+      const querySnapshot = await getDocs(usersRef);
+      querySnapshot.forEach(async (snapshot) => {
+        const userData = snapshot.data() as User;
+        if (userData.email === user?.email) {
+          await updateDoc(doc(usersRef, snapshot.id), { status: 'offline' });
+          console.log('Status changed successfully');
+        }
+      });
       await signOut(auth);
       navigate('/');
     } catch (error) {
       console.error('Error signing out:', error);
     }
   };
-  
+
   const handleMenuClick = (item: any) => {
     setSelectedMenuItem(item.key);
   };
@@ -51,17 +69,17 @@ const UserHome: React.FC = () => {
               label: 'Profile',
             },
             {
-                key: 'chatRoom',
-                icon: <WechatWorkOutlined />,
-                label: 'Chat Room',
-                children: [
+              key: 'chatRoom',
+              icon: <WechatWorkOutlined />,
+              label: 'Chat Room',
+              children: [
                 {
-                    key: 'allRooms',
-                    label: 'All Rooms',
+                  key: 'allRooms',
+                  label: 'All Rooms',
                 },
                 {
-                    key: 'joinedRooms',
-                    label: 'Joined Rooms',
+                  key: 'joinedRooms',
+                  label: 'Joined Rooms',
                 },
               ],
             },
@@ -99,7 +117,7 @@ const UserHome: React.FC = () => {
         >
           {selectedMenuItem === 'profile' && <UserProfile />}
           {selectedMenuItem === 'allRooms' && <ListAllChatRoom />}
-          {selectedMenuItem === 'joinedRooms' && <ListJoinedChatRoom/>}
+          {selectedMenuItem === 'joinedRooms' && <ListJoinedChatRoom />}
         </StyledContent>
       </Layout>
     </StyledLayout>

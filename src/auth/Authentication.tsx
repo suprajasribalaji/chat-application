@@ -1,6 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
-import { firestore } from '../config/firebase.config';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
   id: string;
@@ -30,38 +28,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [admin, setAdmin] = useState<Admin | null>(null);
 
-  useEffect(() => {
-    // Load user and admin data from local storage on initial load
-    const storedUser = localStorage.getItem('user');
-    const storedAdmin = localStorage.getItem('admin');
-    if (storedUser) setUser(JSON.parse(storedUser));
-    if (storedAdmin) setAdmin(JSON.parse(storedAdmin));
-  }, []);
-
-  const updateStatus = async (userId: string, status: 'online' | 'offline') => {
-    const userDocRef = doc(firestore, 'user', userId);
-    await updateDoc(userDocRef, { status });
-  };
-
-  const userLogin = async (userData: User) => {
+  const userLogin = (userData: User) => {
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData)); // Save to local storage
-    await updateStatus(userData.id, 'online');
+    console.log('user: ', user);
   };
 
-  const adminLogin = async (adminData: Admin) => {
+  const adminLogin = (adminData: Admin) => {
     setAdmin(adminData);
-    localStorage.setItem('admin', JSON.stringify(adminData)); // Save to local storage
+    console.log('admin: ', user);
   };
 
-  const userLogout = async () => {
-    if (user) {
-      await updateStatus(user.id, 'offline');
-    }
+  const userLogout = () => {
     setUser(null);
     setAdmin(null);
-    localStorage.removeItem('user'); // Remove from local storage
-    localStorage.removeItem('admin'); // Remove from local storage
   };
 
   return (

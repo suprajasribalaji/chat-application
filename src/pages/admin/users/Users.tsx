@@ -10,7 +10,10 @@ import moment from 'moment';
 interface User {
     user_id: number;
     email: string;
+    status: string;
     createdAt: Timestamp;
+    joined_rooms: Array<string>;
+    joined_rooms_names?: Array<string>;
 }
 
 const Users: React.FC = () => {
@@ -18,7 +21,9 @@ const Users: React.FC = () => {
     const [columnWidths, setColumnWidths] = useState<{ [key: string]: number }>({
         user_id: 100,
         email: 250,
+        status: 20,
         createdAt: 150,
+        joined_rooms: 200,
         actions: 100,
     });
 
@@ -30,11 +35,24 @@ const Users: React.FC = () => {
         try {
             const usersRef = collection(firestore, 'user');
             const snapshot = await getDocs(usersRef);
+            const roomRef = collection(firestore, 'chat_room');
+
+            const roomSnapshot = await getDocs(roomRef);
+            const roomNamesMap: { [key: string]: string } = {};
+            roomSnapshot.forEach(doc => {
+                const data = doc.data();
+                roomNamesMap[data.roomID] = data.roomName;
+            });
+
             const fetchedUsers: User[] = [];
             snapshot.forEach(doc => {
                 const data = doc.data() as User;
-                fetchedUsers.push({ ...data });
+                fetchedUsers.push({
+                    ...data,
+                    joined_rooms_names: data.joined_rooms.map(roomId => roomNamesMap[roomId] || 'Unknown Room'),
+                });
             });
+
             setUsers(fetchedUsers);
             updateColumnWidths(fetchedUsers);
         } catch (error) {
@@ -64,15 +82,19 @@ const Users: React.FC = () => {
     const updateColumnWidths = (users: User[]) => {
         let maxUserIdWidth = 100;
         let maxEmailWidth = 250;
+        let maxJoinedRoomsWidth = 200;
 
         users.forEach(user => {
-            maxEmailWidth = Math.max(maxEmailWidth, user.email.length * 8); // Assume 8px per character for email width
+            maxEmailWidth = Math.max(maxEmailWidth, user.email.length * 8); 
+            maxJoinedRoomsWidth = Math.max(maxJoinedRoomsWidth, (user.joined_rooms_names?.join(', ') || '').length * 8);
         });
 
         setColumnWidths({
             user_id: maxUserIdWidth,
             email: maxEmailWidth + 50,
+            status: 40,
             createdAt: 150,
+            joined_rooms: maxJoinedRoomsWidth + 50,
             actions: 100,
         });
     };
@@ -91,6 +113,23 @@ const Users: React.FC = () => {
             key: 'email',
             align: 'center',
             width: columnWidths.email,
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            align: 'center',
+            width: columnWidths.status,
+        },
+        {
+            title: 'Joined Rooms',
+            dataIndex: 'joined_rooms_names',
+            key: 'joined_rooms_names',
+            align: 'center',
+            width: columnWidths.joined_rooms,
+            render: (joined_rooms_names: Array<string> = []) => (
+                <div>{joined_rooms_names.join(', ')}</div>
+            ),
         },
         {
             title: 'Created At',
@@ -129,7 +168,9 @@ const Users: React.FC = () => {
                         key: user.user_id,
                         user_id: user.user_id,
                         email: user.email,
+                        status: user.status,
                         createdAt: user.createdAt,
+                        joined_rooms_names: user.joined_rooms_names || [],
                     }))}
                 />
             </TableContainer>
