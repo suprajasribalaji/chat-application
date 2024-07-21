@@ -243,7 +243,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
           <p>Room : {currentRoom.roomName}</p>
         )}
         </RoomID>
-        <Button type='primary' onClick={onClose}>Close</Button>
+        <ButtonGroup>
+          <Button type='primary' onClick={showAllActiveUsers}>Active users</Button>
+          <Button type='primary' onClick={onClose}>Close</Button>
+        </ButtonGroup>
       </Header>
       
       <Content>
