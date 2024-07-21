@@ -323,11 +323,7 @@ const RoomID = styled.div`
 const ButtonGroup = styled.div`
   display: flex;
   gap: 10px;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 8px;
+  margin-right: 2%;
 `;
 
 const Content = styled.div`
