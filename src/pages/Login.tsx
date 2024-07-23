@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import Title from 'antd/es/typography/Title';
 import LoginForm from '../components/form/LoginForm';
 import { ColorBlack, ColorBlue } from '../components/themes/color';
+import BackgroundImage from '../assets/images/bg-img.jpg';
 
 const { TabPane } = Tabs;
 
@@ -100,8 +101,11 @@ const StyledContainer = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: ${ColorBlue.smokyBlue};
   color: ${ColorBlue.deepSeaBlue};
+  background-image: url(${BackgroundImage});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 
 const StyledFormContainer = styled.div`
@@ -110,7 +114,7 @@ const StyledFormContainer = styled.div`
   padding: 20px;
   background-color: ${ColorBlue.lightGrayBlue};
   box-shadow: 0 0 10px ${ColorBlack.transparent1Black};
-  border-radius: 8px;
+  border-radius: 10%;
   display: flex;
   flex-direction: column;
   justify-content: center;
