@@ -4,9 +4,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { collection, getDocs, query, where, doc, setDoc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../../config/firebase.config';
-import { ColorBlue } from '../../../components/themes/color';
+import { ColorBlack, ColorBlue } from '../../../components/themes/color';
 import ShowActiveUsersOfRoomModal from '../../../components/modal/ShowActiveUsersOfRoomModal';
 import { CurrentChatRoom, User } from '../../../utils/utils';
+import ChatWallpaper from '../../../assets/wallpaper/chat-wp.webp';
 
 interface ChatRoomProps {
   roomID: string;
@@ -77,7 +78,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
    
   console.log('Current onlineUsers:', onlineUsers);
   
-   const currentChatRoom = async () => {
+  const currentChatRoom = async () => {
     try {
       const chatRoomRef = collection(firestore, 'chat_room');
       const querySnapshot = await getDocs(
@@ -90,11 +91,11 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
           .map(([key, value]) => ({
             id: key,
             ...value,
-            sender: value.userID
+            sender: value.userID // Ensure this is the actual user ID, not the document ID
           }))
           .sort((a, b) => a.timestamp - b.timestamp);
         setMessages(messagesArray);
-        console.log(data);
+        console.log('Messages loaded:', messagesArray);
       });
     } catch (error) {
       console.log(error);
@@ -166,18 +167,18 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
   const sendMessage = async () => {
     if (input && userID) {
       const actualUserID = await getUserIDByDocId(userID);
-
+  
       if (!actualUserID) {
         message.error('Failed to retrieve user ID.');
         return;
       }
-
+  
       const timestamp = Date.now();
       const newMessage: Message = {
         id: `${timestamp}`,
         userID: actualUserID,
         content: input,
-        sender: actualUserID,
+        sender: actualUserID, 
         timestamp,
       };
 
@@ -242,21 +243,25 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ roomID, userID, onClose }) => {
           <RoomID>{currentRoom && <p>{currentRoom.roomName}</p>}</RoomID>
         </RoomInfo>
         <ButtonGroup>
-          <Button type='primary' onClick={showAllActiveUsers} icon={<DownCircleOutlined />}>Active users</Button>
-          <Button type='primary' onClick={onClose} icon={<CloseOutlined />}>Close</Button>
-
+          <StyledButton type='link' onClick={showAllActiveUsers} icon={<DownCircleOutlined />}>Active users</StyledButton>
+          <StyledButton type='link' onClick={onClose} icon={<CloseOutlined />}>Close</StyledButton>
         </ButtonGroup>
       </Header>
 
       <Content>
-        {messages.map((msg, index) => (
-          <Message key={msg.id || index}>
-            <MessageContent>
-              <strong>{msg.sender}</strong>: {msg.content}
-            </MessageContent>
-            <MessageTimestamp>{formatDate(msg.timestamp)}</MessageTimestamp>
-          </Message>
-        ))}
+        {messages.map((msg, index) => {
+          const isCurrentUser = msg.sender === userID;
+          console.log('Message sender:', msg.sender, 'Current user:', userID, 'Is current user:', isCurrentUser);
+          return (
+            <Message key={msg.id || index} isCurrentUser={isCurrentUser}>
+              {!isCurrentUser && <UserName>{msg.sender}</UserName>}
+              <MessageContent isCurrentUser={isCurrentUser}>
+                <UserMessage>{msg.content}</UserMessage>
+              </MessageContent>
+              <MessageTimestamp>{formatDate(msg.timestamp)}</MessageTimestamp>
+            </Message>
+          );
+        })}
       </Content>
       
       <Footer>
@@ -288,7 +293,7 @@ const ChatRoomContainer = styled.div`
   flex-direction: column;
   width: 100%;
   height: 78.1vh;
-  background-color: #f0f0f0;
+  background-image: url(${ChatWallpaper});
 `;
 
 const Header = styled.div`
@@ -296,7 +301,7 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   padding-left: 2%;
-  background-color: ${ColorBlue.steelBlue};
+  background-color: ${ColorBlue.transparent45DeepSeaBlue};
   color: white;
 `;
 
@@ -308,39 +313,41 @@ const RoomID = styled.div`
   font-size: 150%;
 `;
 
+const StyledButton = styled(Button)`
+color: white !important;
+&:hover {
+  color: ${ColorBlack.transparent1Black} !important;
+}
+&:focus, &:active {
+  color: ${ColorBlack.transparent1Black} !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+`;
+
 const ButtonGroup = styled.div`
   display: flex;
   gap: 10px;
   margin-right: 2%;
 `;
 
-const Content = styled.div`
-  flex: 1;
-  padding: 1.5%;
-  overflow-y: auto;
+const UserName = styled.div`
+  font-weight: bold;
+  margin-bottom: 8%;
 `;
 
-const Message = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.3%;
-  padding: 1.3%;
-  background-color: white;
-  border-radius: 4px;
-`;
-
-const MessageContent = styled.div`
-  flex: 1;
+const UserMessage = styled.div`
+  word-wrap: break-word;
 `;
 
 const MessageTimestamp = styled.div`
   font-size: 0.8em;
-  color: gray;
+  color: black;
+  margin-top: 5%;
 `;
 
 const Footer = styled.div`
-  padding-top: 2%;
+  padding-top: 1%;
   background-color: white;
 `;
 
@@ -349,4 +356,31 @@ const StyledFooter = styled.div`
   align-items: center;
   gap: 2%;
   padding-left: 1%;
+`;
+
+const Message = styled.div<{ isCurrentUser: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: ${props => props.isCurrentUser ? 'flex-end' : 'flex-start'};
+  padding: 1%;
+  max-width: 50%;
+  word-wrap: break-word; 
+  overflow-wrap: break-word;
+  align-self: ${props => props.isCurrentUser ? 'flex-end' : 'flex-start'};
+`;
+
+const MessageContent = styled.div<{ isCurrentUser: boolean }>`
+  background-color: ${props => props.isCurrentUser ? '#dcf8c6' : '#f0f0f0'};
+  border-radius: 40px;
+  padding: 12%;
+  max-width: 100%;
+`;
+
+const Content = styled.div`
+  flex: 1;
+  padding-left: 1%;
+  padding-top: 1%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 `;
