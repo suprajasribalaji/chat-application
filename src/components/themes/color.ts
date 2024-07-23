@@ -1,11 +1,16 @@
-export const PageDivisionBackground = {
-    navbarBg: '#C9D7DD',
-    contentBg: '#1B1A55',
+
+export const ColorBlack = {
+    transparent1Black: '#0000001A',
 };
 
-export const Buttons = {
-    backgroundColor: '#637A9F',
-    text: '#fff',
-    hover: '#1B1A55',
-    headerFooter: '#f0f2f5',
+export const ColorBlue = {
+    deepSeaBlue: '#27374D',
+    transparent25DeepSeaBlue: '#27374D40',
+    lightGrayBlue: '#DDE6ED',
+    smokyBlue: '#758694',
+    steelBlue: '#637A9F',
+};
+
+export const ColorWhite = {
+    primaryWhite: '#FFFFFF',
 };

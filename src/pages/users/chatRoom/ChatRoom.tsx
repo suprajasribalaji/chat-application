@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { collection, getDocs, query, where, doc, setDoc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../../config/firebase.config';
-import { Buttons } from '../../../components/themes/color';
+import { ColorBlue } from '../../../components/themes/color';
 import ShowActiveUsersOfRoomModal from '../../../components/modal/ShowActiveUsersOfRoomModal';
 import { CurrentChatRoom, User } from '../../../utils/utils';
 
@@ -296,7 +296,7 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   padding-left: 2%;
-  background-color: ${Buttons.backgroundColor};
+  background-color: ${ColorBlue.steelBlue};
   color: white;
 `;
 
