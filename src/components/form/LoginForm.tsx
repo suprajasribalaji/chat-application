@@ -101,6 +101,7 @@ const LoginForm = ({ form, collectionName, successMessage, redirectPath, formTyp
         <Input
           prefix={<UserOutlined />}
           placeholder="Enter Your Email"
+          style={{border: 'none'}}
         />
       </Form.Item>
       <Form.Item
@@ -110,20 +111,21 @@ const LoginForm = ({ form, collectionName, successMessage, redirectPath, formTyp
         <Input.Password
           prefix={<LockOutlined />}
           placeholder="Password"
+          style={{border: 'none'}}
         />
       </Form.Item>
       {formType === 'register' && (
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <StyledButton  htmlType="submit">
             Register
-          </Button>
+          </StyledButton>
         </Form.Item>
       )}
       {formType === 'login' && (
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <StyledButton htmlType="submit">
             Login
-          </Button>
+          </StyledButton>
         </Form.Item>
       )}
     </StyledForm>
@@ -134,4 +136,19 @@ export default LoginForm;
 
 const StyledForm = styled(Form)`
   width: 100%;
+`;
+
+const StyledButton = styled(Button)`
+  color: #FFFFFF !important;
+  background-color: #27374D !important;
+  border: none;
+  &:hover {
+    background-color: #27374DB3 !important;
+  }
+  &:focus, &:active {
+    color: #FFFFFF !important;
+    background-color: #1f2c3d !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
 `;

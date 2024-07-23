@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserOutlined, WechatWorkOutlined, MenuFoldOutlined, MenuUnfoldOutlined, LogoutOutlined } from '@ant-design/icons';
 import { auth, firestore } from "../../config/firebase.config";
 import styled from 'styled-components';
-import { PageDivisionBackground } from '../../components/themes/color';
+import { ColorBlue } from '../../components/themes/color';
 import ListAllChatRoom from './chatRoom/ListAllChatRoom';
 import ListJoinedChatRoom from './chatRoom/ListJoinedChatRoom';
 import UserProfile from './profile/UserProfile';
@@ -132,7 +132,7 @@ const StyledHeader = styled(Header)`
 `;
 
 const StyledContent = styled(Content)`
-  background: ${PageDivisionBackground.contentBg};
+  background: ${ColorBlue.darkIndigoBlue};
 `;
 
 const NavBarItems = styled.div`
